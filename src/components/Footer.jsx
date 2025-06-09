@@ -9,18 +9,51 @@ import {
 } from "react-icons/fa6";
 import { FaEnvelope, FaPhone } from "react-icons/fa";
 import { LuArrowUpRight } from "react-icons/lu";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { useRef } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
+  const headingRef = useRef(null);
+  const linkRef = useRef(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: headingRef.current,
+        start: "top 70%",
+      },
+      defaults: { ease: "power2.out", duration: 0.5 }
+    });
+
+    tl.from(headingRef.current, { opacity: 0, scale: 0 })
+      .from(linkRef.current, { opacity: 0, y: -30 }, "-=0.3");
+
+  })
   return (
     <footer className="bg-black text-white px-6 py-12 md:py-20">
       {/* Heading */}
-      <h2 className="text-5xl md:text-6xl font-extrabold text-center mb-24">
-        Let's Work Together{" "}
-        <LuArrowUpRight className="inline text-red-600 text-5xl" />
+      <h2 ref={headingRef} className="group text-5xl md:text-6xl font-extrabold text-center mb-24">
+        <span className="relative inline-flex overflow-hidden">
+          <span className="flex gap-1 translate-y-0 transition duration-500 group-hover:translate-y-[-160%]">
+            Let's Work Together{" "}
+            <LuArrowUpRight className="inline text-red-600 text-5xl" />
+          </span>
+          <span className="absolute translate-y-[164%] transition duration-500 group-hover:translate-y-0">
+            <span className="flex">
+              Let's Work Together{" "}
+              <LuArrowUpRight className="inline text-red-600 text-5xl" />
+            </span>
+          </span>
+        </span>
+
       </h2>
 
       {/* Footer Columns */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 text-md md:text-base gap-20 mb-10">
+      <div ref={linkRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 text-md md:text-base gap-20 mb-10">
         {/* Logo + Contact */}
         <div>
           <div className="flex items-center gap-2 mb-12">
@@ -74,7 +107,7 @@ const Footer = () => {
             value="Subscribe"
             className="w-full bg-red-800 px-3 py-2 text-white"
           />
-          
+
         </div>
       </div>
 

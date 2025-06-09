@@ -11,8 +11,8 @@ const Animation = () => {
 
   useFrame(() => {
     if (hovered && meshRef.current) {
-      meshRef.current.rotation.y = mouse.x * Math.PI * 0.05;
-      meshRef.current.rotation.x = -mouse.y * Math.PI * 0.05;
+      meshRef.current.rotation.y = mouse.x * Math.PI * 0.1;
+      meshRef.current.rotation.x = -mouse.y * Math.PI * 0.1;
     }
   });
 
@@ -25,7 +25,7 @@ const Animation = () => {
       <planeGeometry args={[5, 5.7]} />
       <meshStandardMaterial transparent opacity={0} />
       <Html center position={[0, 0, 0.01]} transform scale={0.4} className='z-10'>
-          <Text />
+        <Text />
       </Html>
     </mesh>
   );

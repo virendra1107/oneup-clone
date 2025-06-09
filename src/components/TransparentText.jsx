@@ -1,26 +1,64 @@
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const TransparentText = () => {
+  const sectionRef = useRef(null);
+
+  // Text you want to animate
+  const text = "We're Passionate Thinkers";
+
+  // Split text into chars with span wrapper
+  const chars = text.split("").map((char, i) => (
+    <span
+      key={i}
+      className="inline-block"
+      style={{ display: char === " " ? "inline" : "inline-block" }}
+    >
+      {char}
+    </span>
+  ));
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        sectionRef.current.querySelectorAll("span"),
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.05,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 70%",
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert(); // cleanup on unmount
+  }, []);
+
   return (
-    <section className="relative h-[60vh] w-full overflow-clip">
-      {/* Background Image */}
-      <img
-        src="/bg_aim.webp"
-        alt="Background"
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] object-cover z-0"
-      />
-      <div className="absolute inset-0 bg-black h-[15%] z-10" />
-
-      {/* Overlay (optional for dark overlay) */}
+    <section
+      ref={sectionRef}
+      className="relative h-[60vh] w-full overflow-hidden flex items-center justify-center bg-black text-white"
+      style={{
+        backgroundImage: "url('/bg_aim.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="absolute inset-0 bg-black/60 z-10" />
-
-      {/* Centered Text */}
-      <div className="relative z-20 flex h-full items-center justify-center">
-        <h1 className="fixed flex flex-row gap-4 flex-wrap text-4xl md:text-6xl font-bold text-white">
-          <span>We&apos;re</span>
-          <span>Passionate</span>
-          <span>Thinkers</span>
-        </h1>
-      </div>
+      <h1 className="relative z-20 flex flex-wrap text-4xl md:text-6xl font-bold select-none">
+        {chars}
+      </h1>
     </section>
   );
 };
